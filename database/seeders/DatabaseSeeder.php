@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
         Post::factory(350)->create();
         Tag::factory(15)->create();
 
+        //for post-tag pivot table
         Post::all()->each(function ($post){
             $tadIds = Tag::inRandomOrder()->limit(rand(1,3))->get()->pluck('id');
             $post->tags()->attach($tadIds);
