@@ -7,3 +7,12 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 @import "~@fortawesome/fontawesome-free/css/all.min.css";
+@import "~venobox/dist/venobox.css";
+
+.img-del-btn{
+    margin-top: -56px;
+}
+.uploader-ui{
+    width: 100px;
+    height: 100px;
+}

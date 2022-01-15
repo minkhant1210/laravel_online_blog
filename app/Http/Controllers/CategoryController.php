@@ -101,6 +101,6 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        return redirect()->back()->with("deleteStatus", $category->title." Category is deleted");
+        return redirect()->back()->with("status", $category->title." Category is deleted");
     }
 }

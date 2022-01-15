@@ -30,7 +30,7 @@
                                 <tr>
                                     <td>{{ $category->id }}</td>
                                     <td>{{ $category->title }}</td>
-                                    <td>{{ $category->user->name }}</td>
+                                    <td>{{ $category->user->name ?? "Unknown User" }}</td>
                                     <td>
                                         <form action="{{ route('category.destroy',$category->id) }}" method="post" class="d-inline-block">
                                             @csrf

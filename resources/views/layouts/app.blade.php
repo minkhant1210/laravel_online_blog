@@ -9,9 +9,6 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -33,15 +30,23 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
+                        @auth
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{{ route('home') }}">Home</a>
+                            <a class="nav-link {{ route('home') == request()->url() ? 'active' : '' }}" aria-current="page" href="{{ route('home') }}">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{{ route('category.create') }}">Category Add</a>
+                            <a class="nav-link {{ route('category.create') == request()->url() ? 'active' : '' }}" aria-current="page" href="{{ route('category.create') }}">Category Add</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{{ route('category.index') }}">Category List</a>
+                            <a class="nav-link {{ route('category.index') == request()->url() ? 'active' : '' }}" aria-current="page" href="{{ route('category.index') }}">Category List</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ route('post.index') == request()->url() ? 'active' : '' }}" aria-current="page" href="{{ route('post.index') }}">Post List</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ route('post.create') == request()->url() ? 'active' : '' }}" aria-current="page" href="{{ route('post.create') }}">Add Post</a>
+                        </li>
+                        @endauth
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -87,5 +92,34 @@
             @yield('content')
         </main>
     </div>
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}"></script>
+
+        @if(session('status'))
+            <script>
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({
+                    icon: 'success',
+                    title: '{{ session('status') }}'
+                })
+            </script>
+        @endif
+
+    <script>
+        new VenoBox({
+            selector: '.venobox'
+        });
+    </script>
 </body>
 </html>
