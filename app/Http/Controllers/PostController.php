@@ -8,6 +8,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
@@ -21,10 +22,15 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::when(isset(request()->search),function ($query){
-            $search = request()->search;
-            $query->where("title","like","%$search%")->orWhere("description","like","%$search%");
-        })->latest('id')->paginate(5);
+        //use with for eager loading
+        //with local scope
+        $posts = Post::search()->latest('id')->paginate(5);
+
+        //without local scope
+//        $posts = Post::when(isset(request()->search),function ($query){
+//            $search = request()->search;
+//            $query->where("title","like","%$search%")->orWhere("description","like","%$search%");
+//        })->latest('id')->paginate(5);
 
         return view('post.index',compact('posts'));
     }
@@ -57,43 +63,52 @@ class PostController extends Controller
             "tags.*" => "integer|exists:tags,id",
         ]);
 
-        //posts stored in db
-        $post = new Post();
-        $post->title = $request->title;
-        $post->slug = Str::slug($request->title);
-        $post->description = $request->description;
-        $post->excerpt = Str::words($request->description,20);
-        $post->category_id = $request->category;
-        $post->user_id = Auth::id();
-        $post->is_published = true;
-        $post->save();
+        DB::beginTransaction();
+        try {
 
-        //attach post and tag in pivot post_tag table
-        $post->tags()->attach($request->tags);
+            //posts stored in db
+            $post = new Post();
+            $post->title = $request->title;
+            $post->slug = $request->title;
+            $post->description = $request->description;
+            $post->excerpt = $request->description;
+            $post->category_id = $request->category;
+            $post->user_id = Auth::id();
+            $post->is_published = true;
+            $post->save();
 
-        //auto create folder/directory
-        if (!Storage::exists('/public/thumbnail')){
-            Storage::makeDirectory('/public/thumbnail');
-        }
+            //attach post and tag in pivot post_tag table
+            $post->tags()->attach($request->tags);
 
-        if ($request->hasFile('photos')){
-            foreach ($request->file('photos') as $photo){
-                //save file
-                $newName = uniqid()."_photo.".$photo->extension();
-                $photo->storeAs('public/photo/',$newName);//storage folder
-
-                //save as thumbnail
-                $img = Image::make($photo);
-                $img->fit(200,200);
-                $img->save('storage/thumbnail/'.$newName); //public folder
-
-                //save in database
-                $photo = new Photo();
-                $photo->name = $newName;
-                $photo->post_id = $post->id;
-                $photo->user_id = Auth::id();
-                $photo->save();
+            //auto create folder/directory
+            if (!Storage::exists('/public/thumbnail')){
+                Storage::makeDirectory('/public/thumbnail');
             }
+
+            if ($request->hasFile('photos')){
+                foreach ($request->file('photos') as $photo){
+                    //save file
+                    $newName = uniqid()."_photo.".$photo->extension();
+                    $photo->storeAs('public/photo/',$newName);//storage folder
+
+                    //save as thumbnail
+                    $img = Image::make($photo);
+                    $img->fit(200,200);
+                    $img->save('storage/thumbnail/'.$newName); //public folder
+
+                    //save in database
+                    $photo = new Photo();
+                    $photo->name = $newName;
+                    $photo->post_id = $post->id;
+                    $photo->user_id = Auth::id();
+                    $photo->save();
+                }
+            }
+            DB::commit();
+
+        }catch (\Exception $e){
+            DB::rollBack();
+            throw $e;
         }
 
         return redirect()->route('post.index')->with("status"," Post is Added");

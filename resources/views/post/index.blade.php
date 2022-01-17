@@ -59,11 +59,16 @@
                             @forelse($posts as $post)
                                 <tr>
                                     <td>{{ $post->id }}</td>
-                                    <td>{{ \Illuminate\Support\Str::words($post->title,10) }}</td>
-                                    <td>
-                                        @forelse($post->photos()->latest('id')->limit(3)->get() as $photo)
+                                    <td>{{ $post->short_title }}</td>
+                                    <td class="text-nowrap">
+{{--                                        @forelse($post->photos()->latest('id')->limit(3)->get() as $photo)--}}
+                                        {{-- for eager loading --}}
+                                        @forelse($post->photos as $key=>$photo)
+                                            @if($key === 3)
+                                                @break
+                                            @endif
                                             <a class="venobox" data-gall="img{{ $post->id }}" href="{{ asset('storage/photo/'.$photo->name) }}">
-                                                <img src="{{ asset('storage/thumbnail/'.$photo->name) }}" height="30" class="rounded-circle border border-2 border-white shadow-sm" alt="image alt"/>
+                                                <img src="{{ asset('storage/thumbnail/'.$photo->name) }}" height="30" class="rounded-circle border border-2 border-white shadow-sm list-thumbnail" alt="image alt"/>
                                             </a>
                                         @empty
                                             <p class="text-muted mb-0">No photo</p>
@@ -105,15 +110,8 @@
                                         @method('delete')
 
                                     </form>
-                                    <td>
-                                        <p class="small mb-0">
-                                            <i class="fas fa-calendar text-primary"></i>
-                                            {{ $post->created_at->format('d-M-Y') }}
-                                        </p>
-                                        <p class="small mb-0">
-                                            <i class="fas fa-clock text-primary"></i>
-                                            {{ $post->created_at->format('h:m A') }}
-                                        </p>
+                                    <td class="text-nowrap">
+                                        {!! $post->show_time !!}
                                     </td>
                                 </tr>
                             @empty

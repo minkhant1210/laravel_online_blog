@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Photo;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
@@ -27,10 +28,21 @@ class DatabaseSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
 
-        User::factory(120)->create();
-        Category::factory(15)->create();
-        Post::factory(350)->create();
-        Tag::factory(15)->create();
+        User::factory(2)->create();
+        Category::factory(5)->create();
+        Post::factory(3)->create();
+        Tag::factory(5)->create();
+
+        Photo::create([
+           "name" => "adsfljkjawef",
+           "user_id" => 1,
+           "post_id" => 1,
+        ]);
+        Photo::create([
+            "name" => "adsfljkjawef",
+            "user_id" => 1,
+            "post_id" => 1,
+        ]);
 
         //for post-tag pivot table
         Post::all()->each(function ($post){

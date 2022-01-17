@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="mb-1">
-                            {{ \Illuminate\Support\Str::words($post->title,10) }}
+                            {{ $post->title }}
                         </h5>
 
                         <div class="text-black-50">

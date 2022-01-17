@@ -11590,3 +11590,11 @@ textarea.form-control-lg {
   width: 100px;
   height: 100px;
 }
+
+td [data-gall]:first-child .list-thumbnail {
+  margin-left: 0;
+}
+
+.list-thumbnail {
+  margin-left: -20px;
+}
