@@ -53,6 +53,7 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
+
         $request->validate([
            "title" => "required|min:2|unique:posts,title",
            "category" => "required|integer|exists:categories,id",

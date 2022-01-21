@@ -15,6 +15,12 @@
                     @endif
 
                     {{ __('You are logged in!') }}
+                        <hr>
+                        <x-alert></x-alert>
+                        <x-alert class="alert-warning"></x-alert>
+                        <x-alert class="alert-danger"></x-alert>
+                        <hr>
+                    {{ $categories }}
                 </div>
             </div>
         </div>

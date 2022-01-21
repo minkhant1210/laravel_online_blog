@@ -13,13 +13,14 @@
                             @csrf
                             @method('put')
                         </form>
-                            <div class="mb-3">
-                                <label for="title" class="form-label">Post Title</label>
-                                <input type="text" name="title" id="title" form="updateForm" value="{{ old('title',$post->title) }}" class="form-control @error('title') is-invalid @enderror" required autofocus>
-                                @error('title')
-                                <small class="text-danger fw-bold"> {{ $message }}</small>
-                                @enderror
-                            </div>
+{{--                            <div class="mb-3">--}}
+{{--                                <label for="title" class="form-label">Post Title</label>--}}
+{{--                                <input type="text" name="title" id="title" form="updateForm" value="{{ old('title',$post->title) }}" class="form-control @error('title') is-invalid @enderror" required autofocus>--}}
+{{--                                @error('title')--}}
+{{--                                <small class="text-danger fw-bold"> {{ $message }}</small>--}}
+{{--                                @enderror--}}
+{{--                            </div>--}}
+                            <x-input name="title" input-title="Post Title" form="updateForm" value="{{ $post->title }}"></x-input>
                             <div class="mb-3">
                                 <label for="category" class="form-label">Select Category</label>
                                 <select name="category" id="category" form="updateForm" class="form-select @error('category') is-invalid @enderror">

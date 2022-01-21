@@ -20,13 +20,14 @@
                                 </div>
                             @endif
                             @csrf
-                            <div class="mb-3">
-                                <label for="title" class="form-label">Post Title</label>
-                                <input type="text" name="title" id="title" value="{{ old('title') }}" class="form-control @error('title') is-invalid @enderror" required autofocus>
-                                @error('title')
-                                <small class="text-danger fw-bold"> {{ $message }}</small>
-                                @enderror
-                            </div>
+{{--                            <div class="mb-3">--}}
+{{--                                <label for="title" class="form-label">Post Title</label>--}}
+{{--                                <input type="text" name="title" id="title" value="{{ old('title') }}" class="form-control @error('title') is-invalid @enderror" required autofocus>--}}
+{{--                                @error('title')--}}
+{{--                                <small class="text-danger fw-bold"> {{ $message }}</small>--}}
+{{--                                @enderror--}}
+{{--                            </div>--}}
+                                <x-input name="title" input-title="Post Title" ></x-input>
                             <div class="mb-3">
                                 <label for="category" class="form-label">Select Category</label>
                                 <select name="category" id="category" class="form-select @error('category') is-invalid @enderror">
