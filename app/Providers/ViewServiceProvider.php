@@ -3,16 +3,14 @@
 namespace App\Providers;
 
 use App\Models\Category;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class ViewServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Register services.
      *
      * @return void
      */
@@ -22,14 +20,18 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Bootstrap any application services.
+     * Bootstrap services.
      *
      * @return void
      */
     public function boot()
     {
-//        DB::listen(fn($q) => logger($q->sql));
-        Paginator::useBootstrap();
+        View::composer(['home','welcome'],function (){
+            View::share("categories",Category::all());
+        });
 
+        Blade::directive('mkz',function (){
+            return "<h4>Hello Min Khant Zaw!</h4>";
+        });
     }
 }

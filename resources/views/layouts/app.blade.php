@@ -129,5 +129,6 @@
             selector: '.venobox'
         });
     </script>
+@stack('script')
 </body>
 </html>
