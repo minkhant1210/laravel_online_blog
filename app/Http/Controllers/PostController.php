@@ -9,6 +9,7 @@ use App\Http\Requests\UpdatePostRequest;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
@@ -42,6 +43,7 @@ class PostController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create',Post::class);
         return view('post.create');
     }
 
@@ -53,17 +55,6 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-
-        $request->validate([
-           "title" => "required|min:2|unique:posts,title",
-           "category" => "required|integer|exists:categories,id",
-           "description" => "required|min:10",
-           "photo" => "nullable",
-           "photo.*" => "file|max:3000|mimes:jpg,png",
-            "tags" => "required",
-            "tags.*" => "integer|exists:tags,id",
-        ]);
-
         DB::beginTransaction();
         try {
 
@@ -134,6 +125,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        Gate::authorize('update',$post);
         return view('post.edit',compact('post'));
     }
 
@@ -146,11 +138,6 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        $request->validate([
-            "title" => "required|min:2|unique:posts,title,$post->id",
-            "category" => "required|integer|exists:categories,id",
-            "description" => "required|min:10"
-        ]);
 
         $post->title = $request->title;
         $post->slug = Str::slug($request->title);
@@ -176,6 +163,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        Gate::authorize('delete',$post);
+
         foreach ($post->photos as $photo) {
             //delete from file
             Storage::delete('public/photo/'.$photo->name);

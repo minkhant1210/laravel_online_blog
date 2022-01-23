@@ -13,9 +13,11 @@
                             <div class="mb-3 d-flex justify-content-between">
 
                                 <div class="">
+                                    @can('create',\App\Models\Post::class)
                                     <a href="{{ route('post.create') }}" class="btn btn-primary">
                                         Create Post
                                     </a>
+                                    @endcan
                                     @isset(request()->search)
                                         <a href="{{ route('post.index') }}" class="btn btn-outline-primary mr-3">
                                             <i class="feather-list"></i>
@@ -83,7 +85,7 @@
                                         </div>
                                     </td>
                                     <td>{{ $post->category->title ?? "Unknown Category" }}</td>
-                                    <td>
+                                    <td class="text-nowrap">
                                         @foreach($post->tags as $tag)
                                             <span class="badge bg-primary small">
                                                 <i class="fas fa-hashtag"></i>
@@ -92,17 +94,21 @@
                                             @endforeach
                                     </td>
                                     <td>{{ $post->user->name ?? "Unknown User" }}</td>
-                                    <td>
+                                    <td class="text-center">
                                         <div class="btn-group">
                                             <a href="{{ route('post.show',$post->id) }}" class="btn btn-sm btn-outline-primary">
                                                 <i class="fas fa-info-circle fa-fw text-info"></i>
                                             </a>
+                                            @can('delete',$post)
                                             <button class="btn btn-sm btn-outline-primary" form="postDeleteForm{{ $post->id }}">
                                                 <i class="fas fa-trash-alt fa-fw text-danger"></i>
                                             </button>
+                                            @endcan
+                                            @can('update',$post)
                                             <a href="{{ route('post.edit',$post->id) }}" class="btn btn-sm btn-outline-primary">
                                                 <i class="fas fa-pen-alt fa-fw text-warning"></i>
                                             </a>
+                                            @endcan
                                         </div>
                                     </td>
                                     <form action="{{ route('post.destroy',$post->id) }}" id="postDeleteForm{{ $post->id }}" method="post" class="d-inline-block">

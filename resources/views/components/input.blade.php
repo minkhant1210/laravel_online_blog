@@ -16,7 +16,7 @@
         @endisset
 
         class="form-control @error($name) is-invalid @enderror"
-        required autofocus>
+        autofocus>
     @error($name)
     <small class="text-danger fw-bold"> {{ $message }}</small>
     @enderror
